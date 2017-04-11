@@ -7,8 +7,6 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 
 
-    bool gameOver;
-
     Text gameTimeText;
     Text fps;
 
@@ -26,7 +24,7 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        gameOver = false;
+  
         gameTime = 0;
 
         gameTimeText = userInterface.GetComponent<Text>();
@@ -56,6 +54,16 @@ public class GameManager : MonoBehaviour {
         gameTime += Time.deltaTime;
         gameTimeText.text = "TIME:" + gameTime;
         fps.text = "FPS" + (int)(1.0f / Time.smoothDeltaTime);
+
+        if (player.transform.position.y < -2)
+        {
+            ResetPlayer();
+        }
+
+        if (player.GetComponent<Player>().Win)
+        {
+            GameOver();
+        }
 	}
 
     void ResetPlayer()
