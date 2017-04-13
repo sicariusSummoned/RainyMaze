@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour {
     private bool win;
     [SerializeField]
     float moveSpeed;
+
+
 
     public bool Win
     {
@@ -17,35 +20,37 @@ public class Player : MonoBehaviour {
 	void Start () {
         win = false;
         moveSpeed = 10.0f;
+
+        
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow)||CrossPlatformInputManager.GetAxis("Horizontal") <0)
         {
             transform.Translate(Vector3.left * Time.deltaTime*moveSpeed,Space.World);
-            Debug.Log("Left pressed");
+            //Debug.Log("Left pressed");
         }
-        else
-            if (Input.GetKey(KeyCode.UpArrow))
+        
+            if (Input.GetKey(KeyCode.UpArrow)||CrossPlatformInputManager.GetAxis("Vertical")>0)
         {
             transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.World);
-            Debug.Log("Up pressed");
+            //Debug.Log("Up pressed");
 
         }
-        else
-            if (Input.GetKey(KeyCode.RightArrow))
+        
+            if (Input.GetKey(KeyCode.RightArrow)||CrossPlatformInputManager.GetAxis("Horizontal")>0)
         {
             transform.Translate(Vector3.right * Time.deltaTime * moveSpeed, Space.World);
-            Debug.Log("Right pressed");
+            //Debug.Log("Right pressed");
 
         }
-        else
-            if (Input.GetKey(KeyCode.DownArrow))
+        
+            if (Input.GetKey(KeyCode.DownArrow)||CrossPlatformInputManager.GetAxis("Vertical")<0)
         {
             transform.Translate(Vector3.back * Time.deltaTime * moveSpeed, Space.World);
-            Debug.Log("Down pressed");
+            //Debug.Log("Down pressed");
 
 
         }
@@ -57,8 +62,11 @@ public class Player : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
+        
         if (collision.gameObject.tag == "Goal")
         {
+            
+
             win = true;
             Debug.Log("Collided with Goal");
         }

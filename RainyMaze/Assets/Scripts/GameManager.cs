@@ -37,10 +37,13 @@ public class GameManager : MonoBehaviour {
         //highscore
         if (PlayerPrefs.HasKey("highScore"))
         {
+            Debug.Log("FOUND HIGHSCORE");
             highScore = PlayerPrefs.GetFloat("highScore");
-        }else
-        {
-            highScore = 0;
+        }else{
+
+            Debug.Log("MISSING HIGHSCORE");
+            highScore = 9999;
+
         }
 
 
@@ -77,7 +80,7 @@ public class GameManager : MonoBehaviour {
         PlayerPrefs.SetFloat("playerScore", gameTime);
         if (gameTime < highScore)
         {
-            PlayerPrefs.SetFloat("highScore", highScore);
+            PlayerPrefs.SetFloat("highScore", gameTime);
         }
 
         SceneManager.LoadScene("MenuScene");
