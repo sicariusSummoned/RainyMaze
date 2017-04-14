@@ -7,12 +7,18 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 
 
+    public AudioClip fallSound;
+    private AudioSource source;
+
     Text gameTimeText;
     Text fps;
 
     float gameTime;
     float highScore;
     Vector3 startPosition;
+
+    int minutes;
+    int seconds;
 
     [SerializeField]
     GameObject player;
@@ -24,7 +30,9 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-  
+
+        source = player.GetComponent<AudioSource>();
+
         gameTime = 0;
 
         gameTimeText = userInterface.GetComponent<Text>();
@@ -55,7 +63,16 @@ public class GameManager : MonoBehaviour {
 	void Update () {
         //Increment gameTime
         gameTime += Time.deltaTime;
-        gameTimeText.text = "TIME:" + gameTime;
+
+        seconds = Mathf.FloorToInt(gameTime);
+
+        minutes = seconds / 60;
+
+        seconds = seconds % 60;
+
+
+
+        gameTimeText.text = "TIME:" + minutes+":"+seconds;
         fps.text = "FPS" + (int)(1.0f / Time.smoothDeltaTime);
 
         if (player.transform.position.y < -2)
@@ -71,7 +88,9 @@ public class GameManager : MonoBehaviour {
 
     void ResetPlayer()
     {
+        source.PlayOneShot(fallSound);
         player.transform.position = new Vector3(startPosition.x,startPosition.y,startPosition.z);
+        player.GetComponent<Player>().Velocity = new Vector3(0, 0, 0);
     }
 
     void GameOver()

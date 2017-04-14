@@ -5,10 +5,19 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour {
     private bool win;
-    [SerializeField]
+    
+
     float moveSpeed;
 
+    Vector3 velocity;
+    Vector3 acceleration;
 
+    Rigidbody body;
+
+    float tuning = 0.85f;
+
+    float horizontalAxis;
+    float verticalAxis;
 
     public bool Win
     {
@@ -16,44 +25,76 @@ public class Player : MonoBehaviour {
         set { win = value; }
     }
 
+    public Vector3 Velocity
+    {
+        get { return velocity; }
+        set { velocity = value; }
+    }
+
 	// Use this for initialization
 	void Start () {
         win = false;
-        moveSpeed = 10.0f;
-
+        moveSpeed = 50;
+        body = GetComponent<Rigidbody>();
         
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-        if (Input.GetKey(KeyCode.LeftArrow)||CrossPlatformInputManager.GetAxis("Horizontal") <0)
+        verticalAxis = CrossPlatformInputManager.GetAxis("Vertical");
+        horizontalAxis = CrossPlatformInputManager.GetAxis("Horizontal");
+
+        Debug.Log(verticalAxis);
+        Debug.Log(horizontalAxis);
+
+        
+
+
+
+        acceleration = new Vector3 (0,0,0);
+
+        if (Input.GetKey(KeyCode.LeftArrow)||(horizontalAxis<0 && verticalAxis < tuning && verticalAxis > -tuning ))
         {
-            transform.Translate(Vector3.left * Time.deltaTime*moveSpeed,Space.World);
+            //transform.Translate(Vector3.left * Time.deltaTime*moveSpeed,Space.World);
             //Debug.Log("Left pressed");
-        }
-        
-            if (Input.GetKey(KeyCode.UpArrow)||CrossPlatformInputManager.GetAxis("Vertical")>0)
+            acceleration.x += -5;
+        } else
+            if (Input.GetKey(KeyCode.RightArrow)||(horizontalAxis>0 && verticalAxis < tuning && verticalAxis > -tuning))
         {
-            transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.World);
-            //Debug.Log("Up pressed");
-
-        }
-        
-            if (Input.GetKey(KeyCode.RightArrow)||CrossPlatformInputManager.GetAxis("Horizontal")>0)
-        {
-            transform.Translate(Vector3.right * Time.deltaTime * moveSpeed, Space.World);
+            //transform.Translate(Vector3.right * Time.deltaTime * moveSpeed, Space.World);
             //Debug.Log("Right pressed");
-
+            acceleration.x += 5;
         }
-        
-            if (Input.GetKey(KeyCode.DownArrow)||CrossPlatformInputManager.GetAxis("Vertical")<0)
+
+        if (Input.GetKey(KeyCode.UpArrow)||(verticalAxis > 0 && horizontalAxis < tuning && horizontalAxis > -tuning))
         {
-            transform.Translate(Vector3.back * Time.deltaTime * moveSpeed, Space.World);
-            //Debug.Log("Down pressed");
+            //transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.World);
+            //Debug.Log("Up pressed");
+            acceleration.z += 5;
+        }
+        else
 
+           if (Input.GetKey(KeyCode.DownArrow)||(verticalAxis < 0 && horizontalAxis < tuning && horizontalAxis > -tuning))
+        {
+            //transform.Translate(Vector3.back * Time.deltaTime * moveSpeed, Space.World);
+            //Debug.Log("Down pressed");
+            acceleration.z += -5;
 
         }
+
+
+        velocity += acceleration;
+
+        if (velocity.magnitude >= 15)
+        {
+            velocity.Normalize();
+            velocity *= 15;
+        }
+
+        velocity *= 0.65f;
+
+        body.AddForce(velocity);
 
 
 
