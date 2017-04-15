@@ -18,6 +18,7 @@ public class Player : MonoBehaviour {
 
     float horizontalAxis;
     float verticalAxis;
+    float absoluteDifference;
 
     public bool Win
     {
@@ -45,10 +46,8 @@ public class Player : MonoBehaviour {
         verticalAxis = CrossPlatformInputManager.GetAxis("Vertical");
         horizontalAxis = CrossPlatformInputManager.GetAxis("Horizontal");
 
-        Debug.Log(verticalAxis);
-        Debug.Log(horizontalAxis);
 
-        
+        absoluteDifference = Mathf.Abs(Mathf.Abs(verticalAxis) - Mathf.Abs(horizontalAxis));
 
 
 
@@ -56,31 +55,54 @@ public class Player : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.LeftArrow)||(horizontalAxis<0 && verticalAxis < tuning && verticalAxis > -tuning ))
         {
-            //transform.Translate(Vector3.left * Time.deltaTime*moveSpeed,Space.World);
-            //Debug.Log("Left pressed");
             acceleration.x += -5;
         } else
             if (Input.GetKey(KeyCode.RightArrow)||(horizontalAxis>0 && verticalAxis < tuning && verticalAxis > -tuning))
         {
-            //transform.Translate(Vector3.right * Time.deltaTime * moveSpeed, Space.World);
-            //Debug.Log("Right pressed");
+            
             acceleration.x += 5;
         }
 
         if (Input.GetKey(KeyCode.UpArrow)||(verticalAxis > 0 && horizontalAxis < tuning && horizontalAxis > -tuning))
         {
-            //transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.World);
-            //Debug.Log("Up pressed");
+            
             acceleration.z += 5;
         }
         else
 
            if (Input.GetKey(KeyCode.DownArrow)||(verticalAxis < 0 && horizontalAxis < tuning && horizontalAxis > -tuning))
         {
-            //transform.Translate(Vector3.back * Time.deltaTime * moveSpeed, Space.World);
-            //Debug.Log("Down pressed");
+            
             acceleration.z += -5;
 
+        }
+
+
+        //Diagonals for the touch controls
+
+        //Top Left
+        if (verticalAxis > 0 && horizontalAxis < 0 && absoluteDifference < .2f)
+        {
+            acceleration.x += -5;
+            acceleration.z += 5;
+        } 
+        //Top Right
+        if (verticalAxis > 0 && horizontalAxis > 0 && absoluteDifference < .2f)
+        {
+            acceleration.x += 5;
+            acceleration.z += 5;
+        } 
+        //Bottom Left
+        if (verticalAxis < 0 && horizontalAxis < 0 && absoluteDifference < .2f)
+        {
+            acceleration.x += -5;
+            acceleration.z += -5;
+        } 
+        //Bottom Right
+        if (verticalAxis < 0 && horizontalAxis > 0 && absoluteDifference < .2f)
+        {
+            acceleration.x += 5;
+            acceleration.z += -5;
         }
 
 
